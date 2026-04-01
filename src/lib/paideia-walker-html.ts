@@ -337,9 +337,10 @@ function setVideoSlide(
 ) {
   slide.attr("style", `background-image: url(${poster ?? src})`);
   slide.removeClass("site-slider-with-image").addClass("site-slider-with-video");
-  slide.find(".site-slider-image-block").replaceWith(`
+  slide.find(".site-slider-image-block, .site-slider-video-block").remove();
+  slide.prepend(`
     <div class="site-slider-video-block">
-      <video class="site-slider-video" autoplay loop muted playsinline poster="${poster ?? ""}">
+      <video class="site-slider-video" autoplay loop muted playsinline poster="${poster ?? ""}" title="${escapeHtml(title)}">
         <source src="${src}" type="video/mp4" />
       </video>
     </div>
