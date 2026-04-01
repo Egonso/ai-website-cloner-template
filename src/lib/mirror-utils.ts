@@ -28,6 +28,16 @@ const contentTypes = new Map([
 function transformWalkerSiteScript(source: string) {
   const replacementIntroBlock = `  var isBannerFadedOut = false;
   var hasLeftPreScrollState = false;
+  var homeScrollStorageKey = 'paideia-home-scroll-left';
+  var storedHomeScroll = 0;
+  var shouldRestoreHomeScroll = false;
+
+  try {
+    storedHomeScroll = Number(window.sessionStorage.getItem(homeScrollStorageKey) || '0');
+    shouldRestoreHomeScroll = storedHomeScroll > 24;
+    window.__paideiaStoredHomeScroll = storedHomeScroll;
+    window.__paideiaShouldRestoreHomeScroll = shouldRestoreHomeScroll;
+  } catch (error) {}
 
   // Banner intro interaction gate
   if (document.body.classList.contains('home-page') && !document.body.classList.contains('cms-page-is-in-edit-mode')) {
@@ -106,7 +116,7 @@ function transformWalkerSiteScript(source: string) {
         fadeOutBanner();
       }
 
-      if (!window.location.hash) {
+      if (!window.location.hash && !shouldRestoreHomeScroll) {
         $introBanner.removeClass('fade-out').addClass('fade-in');
         $('body').addClass('stop-scrolling paideia-intro-active paideia-pre-scroll');
       } else {

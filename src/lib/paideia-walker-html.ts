@@ -3,11 +3,11 @@ import type { AnyNode } from "domhandler";
 import {
   galleries,
   homeContent,
-  pageNav,
   pages,
   pressItems,
   searchDocuments,
   shellConfig,
+  schoolPaperIssues,
   teamGroups,
   type GalleryPage,
   type TeamGroup,
@@ -34,7 +34,7 @@ function buildInlineLinks(links: WalkerLink[]) {
       (link) =>
         `<a href="${link.href}"${linkAttributes(link)}>${escapeHtml(link.label)}</a>`,
     )
-    .join("&nbsp; &nbsp;");
+    .join(" ");
 }
 
 function applyBaseDocument(
@@ -72,7 +72,7 @@ function applyBaseDocument(
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(title)}" />
     <meta name="twitter:description" content="${escapeHtml(description)}" />
-    <meta name="theme-color" content="#762123" />
+    <meta name="theme-color" content="#283058" />
     <link rel="icon" type="image/png" href="/paideia/logos/mark-color-tight.png" />
     <link rel="shortcut icon" href="/paideia/logos/mark-color-tight.png" />
     <link rel="apple-touch-icon" href="/paideia/logos/mark-color-tight.png" />
@@ -115,6 +115,7 @@ function applyBaseDocument(
 }
 
 function transformShell($: CheerioAPI, pathname: string) {
+  const colourLogoSrc = pathname === "/" ? shellConfig.homeLogoSrc : shellConfig.pageLogoSrc;
   const logoSlide = $("#site-header-logo .site-slide").first();
   logoSlide
     .attr("style", "background-image: none;")
@@ -126,8 +127,8 @@ function transformShell($: CheerioAPI, pathname: string) {
   logoSlide.find(".site-slider-image-block").html(`
     <span class="paideia-header-lockup" aria-hidden="true">
       <span class="paideia-header-lockup__mark">
-        <img src="/paideia/logos/mark-color-tight.png" class="paideia-header-lockup__mark-image paideia-header-lockup__mark-image--colour" title="" alt="${escapeHtml(shellConfig.logoAlt)}" />
-        <img src="/paideia/logos/mark-white-tight.png" class="paideia-header-lockup__mark-image paideia-header-lockup__mark-image--white" title="" alt="" />
+        <img src="${colourLogoSrc}" class="paideia-header-lockup__mark-image paideia-header-lockup__mark-image--colour" title="" alt="${escapeHtml(shellConfig.logoAlt)}" />
+        <img src="/paideia/logos/mark-white.png" class="paideia-header-lockup__mark-image paideia-header-lockup__mark-image--white" title="" alt="" />
       </span>
       <span class="paideia-header-lockup__wording">
         <span class="paideia-header-lockup__title">PAIDEIA</span>
@@ -137,7 +138,10 @@ function transformShell($: CheerioAPI, pathname: string) {
   `);
 
   $("#site-header-right-text .cms-feature-datablock").html(
-    `<p>${buildInlineLinks(shellConfig.quickLinks)}</p>`,
+    `<div class="paideia-header-links">
+      <p class="paideia-header-links__primary">${buildInlineLinks(shellConfig.quickLinks)}</p>
+      <p class="paideia-header-links__secondary">${buildInlineLinks(shellConfig.spotlightLinks)}</p>
+    </div>`,
   );
 
   $(".site-search-data").html(`
@@ -219,6 +223,8 @@ function buildMenuColumnHtml(
 }
 
 function buildMenuOverlay(pathname: string) {
+  const directLinks = [...shellConfig.quickLinks, ...shellConfig.spotlightLinks];
+
   const wrappers = [
     {
       wrapperClass: "site-nav-believe-wrapper",
@@ -251,7 +257,7 @@ function buildMenuOverlay(pathname: string) {
             <div id="textfeature_c8f42941ad4e453cbe385316d2307c80" class="cms-text-feature-data">
               <div id="TextFeature_ContentArea_c8f42941ad4e453cbe385316d2307c80" class="cms-feature-datablock cms-text-feature-content site-feature-bottom-no-space custom-link-active header-custom-link cms-tag-feature-text cms-tag-feature-header">
                 <p><var><span style="color:#ffffff;">Direkt</span></var></p>
-                <p>${buildInlineLinks(shellConfig.quickLinks)}</p>
+                <p>${buildInlineLinks(directLinks)}</p>
               </div>
             </div>
           </div>
@@ -292,26 +298,6 @@ function buildPrimaryNav(links: WalkerLink[], pathname: string) {
         )
         .join("")}
     </ul>
-  `;
-}
-
-function buildSidebarNav(pathname: string) {
-  return `
-    <h6>IN DIESER SEKTION</h6>
-    <nav id="site-navigation" class="site-navigation">
-      <ul class="site-nav-block">
-        ${pageNav
-          .map(
-            (link, index) => `
-          <li class="site-nav-item ${index === 0 ? "site-nav-first-item " : ""}level1 ${
-              pathname === link.href ? "site-nav-active-parent site-nav-active-path " : ""
-            }custom-nav-">
-            <a class="site-nav-link" href="${link.href}"${linkAttributes(link)}>${escapeHtml(link.label)}</a>
-          </li>`,
-          )
-          .join("")}
-      </ul>
-    </nav>
   `;
 }
 
@@ -394,6 +380,14 @@ function buildTeamGroupsHtml(groups: TeamGroup[]) {
                   }</p>
                   <h4>${escapeHtml(member.name)}</h4>
                   <p>${member.shortBio}</p>
+                  ${
+                    member.longBio?.length
+                      ? `<details class="paideia-team-card__details">
+                    <summary><span>Mehr erfahren</span></summary>
+                    ${member.longBio.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+                  </details>`
+                      : ""
+                  }
                 </div>
               </article>`,
               )
@@ -407,9 +401,13 @@ function buildTeamGroupsHtml(groups: TeamGroup[]) {
 }
 
 function buildPressHtml() {
+  const sortedItems = [...pressItems].sort((left, right) =>
+    right.sortDate.localeCompare(left.sortDate),
+  );
+
   return `
     <div class="paideia-press-grid">
-      ${pressItems
+      ${sortedItems
         .map(
           (item) => `
         <a class="paideia-press-card" href="${item.href}" target="_blank" rel="noreferrer">
@@ -419,6 +417,27 @@ function buildPressHtml() {
             <h3>${escapeHtml(item.title)}</h3>
             <p>${item.body}</p>
             <span class="site-button-primary">Artikel öffnen</span>
+          </div>
+        </a>`,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function buildSchoolPaperHtml() {
+  return `
+    <div class="paideia-schoolpaper-grid">
+      ${schoolPaperIssues
+        .map(
+          (issue) => `
+        <a class="paideia-schoolpaper-card" href="${issue.href}" target="_blank" rel="noreferrer">
+          <img src="${issue.image}" alt="${escapeHtml(issue.title)}" />
+          <div class="paideia-schoolpaper-card__body">
+            <p class="paideia-schoolpaper-card__meta">${escapeHtml(issue.year)}</p>
+            <h3>${escapeHtml(issue.title)}</h3>
+            <p>${escapeHtml(issue.body)}</p>
+            <span class="site-button-primary">Ausgabe öffnen</span>
           </div>
         </a>`,
         )
@@ -449,6 +468,7 @@ function buildGalleryHtml(gallery: GalleryPage) {
 function appendHomeScrollbar($: CheerioAPI) {
   $("body").append(`
     <div class="paideia-scrollbar" aria-hidden="true">
+      <p class="paideia-scrollbar__hint">Nach rechts ziehen oder horizontal scrollen</p>
       <div class="paideia-scrollbar__track">
         <span class="paideia-scrollbar__thumb"></span>
       </div>
@@ -456,6 +476,7 @@ function appendHomeScrollbar($: CheerioAPI) {
     <script>
       (function () {
         function setupPaideiaScrollbar() {
+          var storageKey = 'paideia-home-scroll-left';
           var scrollbar = document.querySelector('.paideia-scrollbar');
           if (!scrollbar || scrollbar.getAttribute('data-ready') === 'true') {
             return;
@@ -470,6 +491,20 @@ function appendHomeScrollbar($: CheerioAPI) {
 
           scrollbar.setAttribute('data-ready', 'true');
           var dragState = null;
+
+          function readStoredScroll() {
+            try {
+              return Number(window.sessionStorage.getItem(storageKey) || '0');
+            } catch (error) {
+              return 0;
+            }
+          }
+
+          function saveScrollPosition() {
+            try {
+              window.sessionStorage.setItem(storageKey, String(Math.round(scroller.scrollLeft)));
+            } catch (error) {}
+          }
 
           function getMaxScrollLeft() {
             return Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
@@ -515,6 +550,17 @@ function appendHomeScrollbar($: CheerioAPI) {
             scrollbar.classList.add('is-visible');
           }
 
+          function restoreScrollPosition() {
+            var storedScroll = readStoredScroll();
+            if (!storedScroll) {
+              syncScrollbar();
+              return;
+            }
+
+            scroller.scrollLeft = Math.max(0, Math.min(storedScroll, getMaxScrollLeft()));
+            syncScrollbar();
+          }
+
           function jumpScrollbar(clientX) {
             var rect = track.getBoundingClientRect();
             var metrics = getThumbMetrics();
@@ -537,9 +583,18 @@ function appendHomeScrollbar($: CheerioAPI) {
             scrollbar.classList.remove('is-dragging');
           }
 
-          scroller.addEventListener('scroll', syncScrollbar, { passive: true });
+          scroller.addEventListener('scroll', function () {
+            saveScrollPosition();
+            syncScrollbar();
+          }, { passive: true });
           window.addEventListener('resize', syncScrollbar);
           window.addEventListener('load', syncScrollbar);
+          window.addEventListener('pagehide', saveScrollPosition);
+          window.addEventListener('beforeunload', saveScrollPosition);
+
+          document.querySelectorAll('a[href]').forEach(function (link) {
+            link.addEventListener('click', saveScrollPosition, { passive: true });
+          });
 
           track.addEventListener('pointerdown', function (event) {
             if (window.innerWidth < 1024 || event.target === thumb) {
@@ -583,9 +638,10 @@ function appendHomeScrollbar($: CheerioAPI) {
           thumb.addEventListener('pointercancel', stopDragging);
           window.addEventListener('pointerup', stopDragging);
 
-          window.setTimeout(syncScrollbar, 300);
-          window.setTimeout(syncScrollbar, 900);
-          syncScrollbar();
+          window.setTimeout(restoreScrollPosition, 40);
+          window.setTimeout(restoreScrollPosition, 300);
+          window.setTimeout(restoreScrollPosition, 900);
+          restoreScrollPosition();
         }
 
         if (document.readyState === 'loading') {
@@ -641,8 +697,8 @@ export async function renderHomePage() {
   $(".site-custom-intro-banner-wrapper h2").html(`
     <span class="paideia-intro-lockup" aria-hidden="true">
       <span class="paideia-intro-lockup__mark">
-        <img src="/paideia/logos/mark-color-tight.png" class="paideia-intro-lockup__mark-image paideia-intro-lockup__mark-image--colour" alt="" />
-        <img src="/paideia/logos/mark-white-tight.png" class="paideia-intro-lockup__mark-image paideia-intro-lockup__mark-image--white" alt="" />
+        <img src="/paideia/logos/mark-color.png" class="paideia-intro-lockup__mark-image paideia-intro-lockup__mark-image--colour" alt="" />
+        <img src="/paideia/logos/mark-white.png" class="paideia-intro-lockup__mark-image paideia-intro-lockup__mark-image--white" alt="" />
       </span>
       <span class="paideia-intro-lockup__wording">
         <span class="paideia-intro-lockup__title">PAIDEIA</span>
@@ -650,7 +706,9 @@ export async function renderHomePage() {
       </span>
     </span>
   `);
-  $(".site-custom-intro-banner-wrapper .site-custom-intro-definition").remove();
+  $(".site-custom-intro-banner-wrapper .site-custom-intro-definition").html(
+    `<p>${homeContent.introDefinition}</p>`,
+  );
 
   const heroSlide = $(".site-custom-video-banner-wrapper .site-slide").first();
   heroSlide
@@ -681,7 +739,10 @@ export async function renderHomePage() {
     `${heroCaptionStyle ? `${heroCaptionStyle.replace(/\s+$/, "").replace(/;?$/, ";")} ` : ""}pointer-events:none;`,
   );
   heroSlide.find(".site-slider-capton-data").html(`
-    <p style="text-align: right;"><strong>${homeContent.hero.lead}</strong></p>
+    <div class="paideia-home-hero-copy">
+      <p class="paideia-home-hero-copy__lead"><strong>${homeContent.hero.lead}</strong></p>
+      <p class="paideia-home-hero-copy__definition">${homeContent.hero.definition}</p>
+    </div>
   `);
   heroSlide.find(".site-slider-more-desc-data h2").text(homeContent.hero.word);
   heroSlide.find(".site-slider-more-desc-data p").remove();
@@ -701,7 +762,7 @@ export async function renderHomePage() {
     <p><var>${homeContent.familyChoice.eyebrow}</var></p>
     <h2>${homeContent.familyChoice.title}</h2>
     <p><strong>${homeContent.familyChoice.lead}</strong></p>
-    ${buildAccordion("Mehr lesen", homeContent.familyChoice.body)}
+    ${buildAccordion("Mehr erfahren", homeContent.familyChoice.body)}
   `);
   setImageSlide(
     $("#GalleryFeature_dd5c56072c7447058df030fde2e48b62 .site-slide").first(),
@@ -718,7 +779,7 @@ export async function renderHomePage() {
     <p><var>${homeContent.mission.eyebrow}</var></p>
     <h2>${homeContent.mission.title}</h2>
     <p><strong>${homeContent.mission.lead}</strong></p>
-    ${buildAccordion("Mehr lesen", [homeContent.mission.body])}
+    ${buildAccordion("Mehr erfahren", [homeContent.mission.body])}
   `);
 
   setImageSlide(
@@ -736,14 +797,14 @@ export async function renderHomePage() {
     <p><var>${homeContent.balance.eyebrow}</var></p>
     <h2>${homeContent.balance.title}</h2>
     <p><strong>${homeContent.balance.lead}</strong></p>
-    ${buildAccordion("Mehr lesen", [homeContent.balance.body])}
+    ${buildAccordion("Mehr erfahren", [homeContent.balance.body])}
   `);
 
   $("#TextFeature_ContentArea_ff9b5a0d5c924788ab8f5d461aaa8598").html(`
     <p><var>${homeContent.purposefulLearning.eyebrow}</var></p>
     <h2>${homeContent.purposefulLearning.title}</h2>
     <p><strong>${homeContent.purposefulLearning.lead}</strong></p>
-    ${buildAccordion("Mehr lesen", [homeContent.purposefulLearning.body])}
+    ${buildAccordion("Mehr erfahren", [homeContent.purposefulLearning.body])}
   `);
 
   const featureSlides = $("#GalleryFeature_8691daddc2054247ac70e0106181f2db .site-slide");
@@ -761,7 +822,7 @@ export async function renderHomePage() {
     <p>&nbsp;</p>
     <h2><a id="Unsere-Wege" name="Unsere-Wege"></a>${homeContent.pathways.title}</h2>
     <p><strong>${homeContent.pathways.lead}</strong></p>
-    <p>Entdecke die Wege von Paideia im rechten Navigationsmodul.</p>
+    <p>Hier findest du die wichtigsten Einstiege in die Seite ohne Walker-Restnavigation.</p>
   `);
   setImageSlide(
     $("#GalleryFeature_ae04f7e6bf664957a6d8a496f9ec3e47 .site-slide").first(),
@@ -782,13 +843,26 @@ export async function renderHomePage() {
     `);
   });
 
-  setVideoSlide($("#GalleryFeature_1c184909e65b40b2930a1ebacbfdbb53 .site-slide").first(), {
-    src: homeContent.finalBanner.videoSrc,
-    poster: homeContent.finalBanner.poster ?? "/paideia/media/frame-88.jpg",
-    title: homeContent.finalBanner.title,
-    primaryButton: homeContent.finalBanner.buttonPrimary,
-    secondaryButton: homeContent.finalBanner.buttonSecondary,
-  });
+  const finalBannerSlide = $("#GalleryFeature_1c184909e65b40b2930a1ebacbfdbb53 .site-slide").first();
+  if (homeContent.finalBanner.imageSrc) {
+    setImageSlide(finalBannerSlide, homeContent.finalBanner.imageSrc, homeContent.finalBanner.title);
+    finalBannerSlide.find(".site-slider-capton-data").html(`
+      <h2 style="text-align: center;">${escapeHtml(homeContent.finalBanner.title)}</h2>
+      <p style="text-align: center;">
+        <a class="site-button-primary" href="${homeContent.finalBanner.buttonPrimary.href}">${escapeHtml(homeContent.finalBanner.buttonPrimary.label)}</a>
+        &nbsp; &nbsp;&nbsp;
+        <a class="site-button-primary" href="${homeContent.finalBanner.buttonSecondary.href}">${escapeHtml(homeContent.finalBanner.buttonSecondary.label)}</a>
+      </p>
+    `);
+  } else if (homeContent.finalBanner.videoSrc) {
+    setVideoSlide(finalBannerSlide, {
+      src: homeContent.finalBanner.videoSrc,
+      poster: homeContent.finalBanner.poster ?? "/paideia/media/frame-88.jpg",
+      title: homeContent.finalBanner.title,
+      primaryButton: homeContent.finalBanner.buttonPrimary,
+      secondaryButton: homeContent.finalBanner.buttonSecondary,
+    });
+  }
 
   appendHomeScrollbar($);
 
@@ -799,16 +873,25 @@ function buildSubpageBlocks(page: WalkerSubpageContent) {
   if (page.slug === "team") {
     return [
       `<h3><font color="#762123">MENSCHEN</font></h3>
-      <p>Die Reihenfolge folgt bewusst dem abgestimmten Aufbau für Version 1 und zeigt danach alle weiteren relevanten Personen der bestehenden Teamseite.</p>`,
+      <p>Die Reihenfolge folgt bewusst dem abgestimmten Aufbau für Version 1. Zusätzliche Texte lassen sich pro Person aufklappen, damit die Seite klar bleibt und trotzdem mehr Tiefe bietet.</p>`,
       buildTeamGroupsHtml(teamGroups),
     ];
   }
 
   if (page.slug === "presse") {
     return [
-      `<h3><font color="#762123">ARCHIV</font></h3>
-      <p>Die Auswahl folgt den sichtbaren Medienmomenten der bisherigen Schule und ordnet sie als öffentliche Wegmarken.</p>`,
+      `<h3><font color="#762123">CHRONIK</font></h3>
+      <p>Die sichtbaren Medienmomente der Schule werden hier chronologisch von neu nach alt als öffentliche Wegmarken geordnet.</p>`,
       buildPressHtml(),
+    ];
+  }
+
+  if (page.slug === "kreativwerkblatt") {
+    return [
+      ...page.sections,
+      `<h3><font color="#762123">AUSGABEN</font></h3>
+      <p>Die vorhandenen Ausgaben bleiben sichtbar und lassen sich direkt öffnen.</p>`,
+      buildSchoolPaperHtml(),
     ];
   }
 
@@ -828,58 +911,6 @@ function renderSubpageBody(page: WalkerSubpageContent) {
       </div>`,
     )
     .join("");
-}
-
-function renderSideButtons(links: WalkerLink[]) {
-  return `
-    <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-padding-mob-top-50-wrapper cms-tag-feature-text-wrapper">
-      <div class="cms-text-feature-data">
-        <div class="cms-feature-datablock cms-text-feature-content site-padding-mob-top-50 cms-tag-feature-text">
-          ${links
-            .map((link, index) => {
-              const buttonClass =
-                index === links.length - 1 ? "site-button-full-secondary" : "site-button-full-primary";
-              return `<p><a class="${buttonClass}" href="${link.href}"${linkAttributes(link)}>${escapeHtml(link.label)}</a></p>`;
-            })
-            .join("")}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderRightCard(page: WalkerSubpageContent) {
-  return `
-    <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-padding-dt-top-100-wrapper site-padding-mob-top-50-wrapper cms-tag-feature-text-wrapper">
-      <div class="cms-text-feature-data">
-        <div class="cms-feature-datablock cms-text-feature-content site-padding-dt-top-100 site-padding-mob-top-50 cms-tag-feature-text">
-          <h6 style="text-align: right;">${escapeHtml(page.sideCard.eyebrow)}</h6>
-        </div>
-      </div>
-    </div>
-    <div class="cms-gallery-feature cms-gallery-feature-wrapper cms-feature-wrapper featureMainDiv drop-target site-slider-link-wrapper cms-tag-feature-gallery-wrapper cms-tag-feature-display-wrapper cms-tag-feature-related-wrapper">
-      <div class="cms-feature-datablock site-slider site-slider-link cms-tag-feature-gallery cms-tag-feature-display cms-tag-feature-related">
-        <div class="site-slick-wrapper">
-          <div class="site-slide site-slider-with-image" style="background-image: url(${page.sideCard.image})">
-            <a href="${page.sideCard.href}" class="site-slide-link"${linkAttributes({ href: page.sideCard.href, external: page.sideCard.href.startsWith("http") })}>
-              <div class="site-slider-image-block">
-                <img src="${page.sideCard.image}" class="site-slider-image" alt="${escapeHtml(page.sideCard.alt)}" />
-              </div>
-              <div class="site-slider-caption">
-                <div class="site-slider-caption-block">
-                  <div class="site-container">
-                    <div class="site-slider-capton-data">
-                      <p>${escapeHtml(page.sideCard.title)}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
 }
 
 function renderBottomBanner(
@@ -928,15 +959,12 @@ function getBottomBannerLinks(pathname: string): WalkerLink[] {
   }
 
   if (pathname === "/aufnahme") {
-    return [
-      { label: "Infoabend", href: "/infoabend" },
-      { label: "Kontakt", href: "/kontakt" },
-    ];
+    return [{ label: "Kontakt", href: "/kontakt" }];
   }
 
   return [
     { label: "Aufnahme", href: "/aufnahme" },
-    { label: "Infoabend", href: "/infoabend" },
+    { label: "Kontakt", href: "/kontakt" },
   ];
 }
 
@@ -990,12 +1018,12 @@ export async function renderSubpage(slug: string) {
   `);
 
   $("#site-main-content").html(renderSubpageBody(page));
-  $("#site-main-content-right-two").html(renderSideButtons(page.sideButtons));
-  $(".site-sidebar-menu").html(buildSidebarNav(`/${slug}`));
-  $("#site-main-content-right").html(renderRightCard(page));
+  $("#site-main-content-right-two").empty();
+  $(".site-sidebar-menu").empty();
+  $("#site-main-content-right").empty();
   $("#MainContent").html(
     renderBottomBanner(
-      "AUFNAHME",
+      "KENNENLERNEN",
       "/paideia/home/campus-wide.jpg",
       getBottomBannerLinks(`/${slug}`),
     ),
@@ -1084,12 +1112,12 @@ async function renderSubpageFromContent(page: WalkerSubpageContent, pathname: st
     </div>
   `);
   $("#site-main-content").html(renderSubpageBody(page));
-  $("#site-main-content-right-two").html(renderSideButtons(page.sideButtons));
-  $(".site-sidebar-menu").html(buildSidebarNav(pathname));
-  $("#site-main-content-right").html(renderRightCard(page));
+  $("#site-main-content-right-two").empty();
+  $(".site-sidebar-menu").empty();
+  $("#site-main-content-right").empty();
   $("#MainContent").html(
     renderBottomBanner(
-      "AUFNAHME",
+      "KENNENLERNEN",
       "/paideia/home/campus-wide.jpg",
       getBottomBannerLinks(pathname),
     ),

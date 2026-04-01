@@ -14,6 +14,7 @@ export interface WalkerShellConfig {
   homeLogoSrc: string;
   pageLogoSrc: string;
   quickLinks: WalkerLink[];
+  spotlightLinks: WalkerLink[];
   menuColumns: WalkerMenuColumn[];
   menuImage: {
     src: string;
@@ -31,6 +32,7 @@ export interface TeamMember {
   status?: string;
   image: string;
   shortBio: string;
+  longBio?: string[];
 }
 
 export interface TeamGroup {
@@ -40,9 +42,18 @@ export interface TeamGroup {
 }
 
 export interface PressItem {
+  sortDate: string;
   year: string;
   date: string;
   title: string;
+  body: string;
+  href: string;
+  image: string;
+}
+
+export interface SchoolPaperIssue {
+  title: string;
+  year: string;
   body: string;
   href: string;
   image: string;
@@ -106,35 +117,38 @@ export const shellConfig: WalkerShellConfig = {
     { label: "Kontakt", href: "/kontakt" },
     { label: "Spenden", href: "/verein-traeger#spenden" },
   ],
+  spotlightLinks: [
+    { label: "Partner", href: "/partner-foerderer" },
+    { label: "Presse", href: "/presse" },
+    { label: "Schulzeitung", href: "/kreativwerkblatt" },
+  ],
   menuColumns: [
+    {
+      title: "Kennenlernen",
+      links: [
+        { label: "Aufnahme", href: "/aufnahme" },
+        { label: "Infoabend", href: "/aufnahme#infoabend" },
+        { label: "Weitere Informationen", href: "/weitere-informationen" },
+        { label: "Kontakt", href: "/kontakt" },
+      ],
+    },
     {
       title: "Paideia",
       links: [
         { label: "Philosophie", href: "/philosophie" },
         { label: "Lernen & Alltag", href: "/lernen-alltag" },
-        { label: "Aufnahme", href: "/aufnahme" },
-        { label: "Infoabend", href: "/infoabend" },
-        { label: "Weitere Informationen", href: "/weitere-informationen" },
-      ],
-    },
-    {
-      title: "School",
-      links: [
-        { label: "Primary School", href: "/primary-school" },
-        { label: "Lower School", href: "/lower-school" },
-        { label: "New Avenues", href: "/new-avenues" },
-        { label: "Middle School", href: "/middle-school" },
-        { label: "Upper School", href: "/upper-school" },
-      ],
-    },
-    {
-      title: "Gemeinschaft",
-      links: [
         { label: "Gemeinschaft", href: "/gemeinschaft" },
-        { label: "Athletics", href: "/athletics" },
-        { label: "Academics", href: "/academics" },
-        { label: "Arts", href: "/arts" },
         { label: "Team", href: "/team" },
+      ],
+    },
+    {
+      title: "Mehr",
+      links: [
+        { label: "Verein & Träger", href: "/verein-traeger" },
+        { label: "Partner & Förderer", href: "/partner-foerderer" },
+        { label: "Schulzeitung", href: "/kreativwerkblatt" },
+        { label: "Presse", href: "/presse" },
+        { label: "Fotos 2024/25", href: "/fotos/2024-25" },
       ],
     },
   ],
@@ -146,29 +160,29 @@ export const shellConfig: WalkerShellConfig = {
   footerLinks: [
     { label: "Philosophie", href: "/philosophie" },
     { label: "Aufnahme", href: "/aufnahme" },
-    { label: "Infoabend", href: "/infoabend" },
+    { label: "Infoabend", href: "/aufnahme#infoabend" },
     { label: "Team", href: "/team" },
     { label: "Kontakt", href: "/kontakt" },
   ],
   footerLineHtml:
-    `<p><span style="color:#762122;"><strong>info@kreativwerkstattsalzburg.at</strong></span> <strong><span style="color:#762122;">|</span></strong> <strong>Paideia – Freie Schule Salzburg</strong> – Strubergasse 26, 5020 Salzburg <strong><span style="color:#762122;">|</span></strong> <strong><a href="/infoabend">Nächster Infoabend</a></strong> – ${nextInfoabendFull}</p>`,
+    `<p><span style="color:#283058;"><strong>info@kreativwerkstattsalzburg.at</strong></span> <strong><span style="color:#283058;">|</span></strong> <strong>Paideia – Freie Schule Salzburg</strong> – Strubergasse 26, 5020 Salzburg <strong><span style="color:#283058;">|</span></strong> <strong><a href="/aufnahme#infoabend">Nächster Infoabend</a></strong> – ${nextInfoabendFull}</p>`,
   footerRightHtml:
-    '<p><a href="/verein-traeger">Spenden</a> <a href="/partner-foerderer">Partner</a> <a href="/kreativwerkblatt">KreativWerkBlatt</a> <a href="/presse">Presse</a></p>',
+    '<p><a href="/verein-traeger#spenden">Spenden</a> <a href="/partner-foerderer">Partner</a> <a href="/kreativwerkblatt">Schulzeitung</a> <a href="/presse">Presse</a></p>',
 };
 
 export const homeContent = {
   introWord: "PAIDEIA",
   introDefinition:
-    "Paideia bezeichnet die Formung des ganzen Menschen – durch Beziehung, Freiheit, Form und Weisheit.",
+    "Paideia bezeichnet die Bildung des ganzen Menschen: Beziehung als Fundament, sinnvolles Schaffen als Weg und Weisheit plus Kompetenz als Ziel.",
   hero: {
     lead:
-      "Paideia ist eine freie Schule in Salzburg, in der Kinder gesehen, gefordert und in eine verantwortliche Wirksamkeit hinein begleitet werden.",
+      "Paideia ist die freie Schule in Salzburg, in der Kinder gesehen, gefordert und in eine verantwortliche Wirksamkeit hinein begleitet werden.",
     definition:
-      "Paideia meint mehr als Schule: die Bildung des ganzen Menschen in Haltung, Urteilskraft, Ausdruck und Gemeinschaft.",
+      "Paideia meint mehr als Unterricht: die Bildung des ganzen Menschen in Haltung, Urteilskraft, Ausdruck und Gemeinschaft.",
     word: "GESEHEN",
-    videoSrc: "/paideia/icloud/climbing-clip.mp4",
-    poster: "/paideia/icloud/videos/climbing-clip-poster.jpg",
-    still: "/paideia/icloud/videos/climbing-clip-poster.jpg",
+    videoSrc: "/paideia/icloud/videos/album-video-416.mp4",
+    poster: "/paideia/icloud/videos/album-video-416-poster.jpg",
+    still: "/paideia/icloud/videos/album-video-416-poster.jpg",
   },
   values: [
     {
@@ -207,23 +221,33 @@ export const homeContent = {
       "Klein, persönlich, verbindlich und in einer Haltung verankert, die Wärme und Anspruch nicht gegeneinander ausspielt.",
     body: [
       "31 Kinder lernen derzeit in einer bewusst überschaubaren Gemeinschaft.",
-      "Die Schule verbindet Beziehung, Projektlernen, Kulturarbeit und klare Tagesrhythmen.",
+      "Die Schule verbindet Beziehung, Projektlernen, Kulturarbeit, Schulzeitung und klare Tagesrhythmen.",
     ],
     cutoutImage: "/paideia/team/karin-mitterbauer.jpg",
   },
   gridImages: [
+    "/paideia/gallery/2024-25/kws2413.jpeg",
     "/paideia/icloud/table-group.jpg",
+    "/paideia/gallery/2024-25/kws2416.jpeg",
     "/paideia/icloud/stage-performance.jpg",
+    "/paideia/gallery/2024-25/kws2418.jpeg",
     "/paideia/icloud/climbing-action.jpg",
+    "/paideia/gallery/2024-25/kws2421.jpeg",
     "/paideia/icloud/sailing-group.jpg",
+    "/paideia/gallery/2024-25/kws2422.jpeg",
     "/paideia/icloud/heart-hats.jpg",
     "/paideia/icloud/forest-circle.jpg",
+    "/paideia/gallery/2024-25/kws2433.jpeg",
     "/paideia/icloud/stream-play.jpg",
+    "/paideia/gallery/2024-25/kws2436.jpeg",
     "/paideia/icloud/classroom-boys.jpg",
     "/paideia/icloud/climbing-wall-group.jpg",
     "/paideia/icloud/forest-group.jpg",
+    "/paideia/gallery/2024-25/kws2456.jpeg",
     "/paideia/icloud/teens-grass.jpg",
     "/paideia/icloud/dock-group.jpg",
+    "/paideia/gallery/2023-24/kws1.jpeg",
+    "/paideia/gallery/2023-24/kws17.jpeg",
   ],
   mission: {
     eyebrow: "Bildung als",
@@ -261,9 +285,9 @@ export const homeContent = {
     {
       title: "KULTUR",
       body:
-        "RHABARBER RHABARBER und das KreativWerkBlatt zeigen, dass Schule eine kulturelle Öffentlichkeit haben darf.",
+        "RHABARBER RHABARBER und die Schulzeitung zeigen, dass Schule eine kulturelle Öffentlichkeit haben darf.",
       href: "/kreativwerkblatt",
-      buttonLabel: "Zum KreativWerkBlatt",
+      buttonLabel: "Zur Schulzeitung",
       image: "/paideia/icloud/stage-performance.jpg",
     },
     {
@@ -276,54 +300,55 @@ export const homeContent = {
     },
   ],
   pathways: {
-    title: "UNSERE LERNWEGE",
+    title: "ORIENTIERUNG",
     lead:
-      "Kinder und Jugendliche entwickeln sich unterschiedlich. Paideia gestaltet Räume, in denen Alter, Reife und Verantwortung stimmig zusammenkommen.",
+      "Die wichtigsten Einstiege sollen sofort klar sein: kennenlernen, verstehen, Menschen sehen und Materialien entdecken.",
   },
   stages: [
     {
-      label: "6–9 Jahre",
-      title: "ANKOMMEN UND VERTRAUEN",
+      label: "Kennenlernen",
+      title: "AUFNAHME",
       body:
-        "Beziehung, Rhythmus, Bewegung und eine erste Eigenständigkeit bilden den Boden für Neugier und Lernfreude.",
-      href: "/primary-school",
-      buttonLabel: "Primary School",
-      image: "/paideia/icloud/drawing-closeup.jpg",
-    },
-    {
-      label: "10–12 Jahre",
-      title: "VERTIEFEN UND ERPROBEN",
-      body:
-        "Kinder entdecken ihre Interessen, übernehmen kleine Verantwortungen und verbinden Wissen zunehmend mit Projekten.",
-      href: "/middle-school",
-      buttonLabel: "Middle School",
-      image: "/paideia/icloud/table-group.jpg",
-    },
-    {
-      label: "13–15 Jahre",
-      title: "AUSDRUCK UND WIRKSAMKEIT",
-      body:
-        "Jugendliche arbeiten eigenständiger, bauen Portfolios auf und lernen, ihre Fähigkeiten in reale Vorhaben zu überführen. Mehr Freiheit kommt dabei nicht zufällig, sondern wächst mit gezeigter Reife und Verantwortung.",
-      href: "/upper-school",
-      buttonLabel: "Upper School",
-      image: "/paideia/icloud/teens-grass.jpg",
-    },
-    {
-      label: "Aufnahme",
-      title: "KENNENLERNEN UND PRÜFEN",
-      body:
-        "Infoabend, Schnupperwoche, Gespräch und eine klare Entscheidungsphase machen den Einstieg transparent.",
+        "Infoabend, Schnupperwoche, Gespräch und Entscheidung sind jetzt auf einer klaren Seite zusammengeführt.",
       href: "/aufnahme",
       buttonLabel: "Zur Aufnahme",
       image: "/paideia/icloud/classroom-boys.jpg",
     },
+    {
+      label: "Menschen",
+      title: "TEAM",
+      body:
+        "Kernteam, weiteres Team und bisher begleitet bleiben sichtbar und lassen sich jetzt vertieft aufklappen.",
+      href: "/team",
+      buttonLabel: "Zum Team",
+      image: "/paideia/icloud/forest-team.jpg",
+    },
+    {
+      label: "Netzwerk",
+      title: "PARTNER & FÖRDERER",
+      body:
+        "Die Schule zeigt ihr lokales Unterstützungsnetzwerk kompakter und ohne unnötige Sponsorensprache.",
+      href: "/partner-foerderer",
+      buttonLabel: "Zu den Partnern",
+      image: "/paideia/icloud/room-circle.jpg",
+    },
+    {
+      label: "Material",
+      title: "SCHULZEITUNG",
+      body:
+        "Die bisherigen Ausgaben werden als echte Vorschau mit Klick auf die jeweilige Ausgabe sichtbar.",
+      href: "/kreativwerkblatt",
+      buttonLabel: "Zur Schulzeitung",
+      image: "/paideia/newspaper/kreativwerkblatt-cover.png",
+    },
   ],
   finalBanner: {
-    title: "AUFNAHME",
-    videoSrc: "/paideia/icloud/climbing-clip.mp4",
-    poster: "/paideia/icloud/videos/climbing-clip-poster.jpg",
+    title: "KENNENLERNEN",
+    imageSrc: "/paideia/home/campus-wide.jpg",
+    videoSrc: undefined,
+    poster: undefined,
     buttonPrimary: { label: "Aufnahme", href: "/aufnahme" },
-    buttonSecondary: { label: "Infoabend", href: "/infoabend" },
+    buttonSecondary: { label: "Kontakt", href: "/kontakt" },
   },
 };
 
@@ -338,6 +363,10 @@ const coreTeam: TeamGroup = {
       image: "/paideia/team/karin-mitterbauer.jpg",
       shortBio:
         "Seit über 20 Jahren beschäftigt sie sich mit freier, intrinsisch motivierter Bildung und hat die Schule als Herzensprojekt aufgebaut.",
+      longBio: [
+        "Sie hält die pädagogische Linie, begleitet Familien durch den Aufnahmeprozess und verbindet den Alltag der Schule mit der größeren Vision eines freien Bildungsortes in Salzburg.",
+        "Im Call wurde klar, wie wichtig ihre Präsenz als erste sichtbare Person bleibt. Diese Ordnung bleibt deshalb bewusst erhalten.",
+      ],
     },
     {
       name: "Oliwia Garlicka",
@@ -345,6 +374,9 @@ const coreTeam: TeamGroup = {
       image: "/paideia/team/oliwia-garlicka.jpg",
       shortBio:
         "Sie verbindet Herzensbildung, künstlerische Impulse und psychologisches Gespür mit einer starken Präsenz im Alltag der Kinder.",
+      longBio: [
+        "Ihre Arbeit verbindet Beziehung, Kreativität und eine feine Aufmerksamkeit dafür, was Kinder innerlich gerade brauchen, um sicher und zugleich mutig zu werden.",
+      ],
     },
     {
       name: "Momo Feichtinger",
@@ -352,6 +384,10 @@ const coreTeam: TeamGroup = {
       image: "/paideia/team/momo-feichtinger.jpg",
       shortBio:
         "Er bringt den Dreiklang der Bildung ein, den er durch First-Principles Thinking und ein Jahr intensiver Gespräche im Education Revolutionaries Club geschärft hat: Beziehung als Fundament, sinnvolles Schaffen als Weg und Weisheit plus Kompetenz als Ziel. Dabei richtet er den Blick auf die Grundprinzipien gelingender Bildung, nicht bloß auf die Gewohnheiten bestehender Systeme.",
+      longBio: [
+        "Sein Beitrag liegt besonders in der begrifflichen Schärfung: Welche Form von Freiheit, Form, Verantwortung und Kompetenz braucht Schule heute wirklich?",
+        "Damit prägt er nicht nur Texte und Positionierung, sondern auch den Blick auf Zukunftskompetenz, KI und eine Lernkultur jenseits bloßer Systemgewohnheiten.",
+      ],
     },
   ],
 };
@@ -367,6 +403,9 @@ const extendedTeam: TeamGroup = {
       image: "/paideia/team/kristina-sachs.jpg",
       shortBio:
         "Sie arbeitet aus einer Haltung gelingender Beziehung, Selbstwirksamkeit und einer Gemeinschaft, die Sicherheit und Potenzialentfaltung verbindet.",
+      longBio: [
+        "Ihre Stärke liegt darin, Lernumgebungen zu halten, in denen Kinder gleichzeitig Sicherheit und Wachstum erleben können.",
+      ],
     },
     {
       name: "Julian Reutterer",
@@ -374,6 +413,9 @@ const extendedTeam: TeamGroup = {
       image: "/paideia/team/julian-reutterer.jpg",
       shortBio:
         "Er verbindet autodidaktisches Lernen, Jugendarbeit und Tanzpädagogik mit einer klaren Haltung von echter Zuwendung.",
+      longBio: [
+        "Damit bringt er Bewegung, Eigeninitiative und eine unmittelbare Arbeit mit Jugendlichen in die Schulkultur ein.",
+      ],
     },
     {
       name: "Tanja Nagaikin",
@@ -382,6 +424,9 @@ const extendedTeam: TeamGroup = {
       image: "/paideia/team/tanja-nagaikin.jpg",
       shortBio:
         "Sie steht für eine konzentrierte, inspirierende Lernatmosphäre, in der Sicherheit, Wunsch und Fehlertoleranz möglich werden.",
+      longBio: [
+        "Auch in ihrer derzeitigen Pause bleibt sie als Teil der gewachsenen Schulkultur sichtbar.",
+      ],
     },
     {
       name: "Lupe Marcos Solar",
@@ -389,6 +434,9 @@ const extendedTeam: TeamGroup = {
       image: "/paideia/team/lupe-marcos-solar.jpg",
       shortBio:
         "Sie bringt soziale Pädagogik, Empathie und die Freude an kreativen, autonomen und sinnvollen Lernwegen in den Alltag ein.",
+      longBio: [
+        "Gerade in kleineren Lernmomenten und im gelebten Alltag trägt diese Form von Freiwilligenarbeit spürbar zur Atmosphäre der Schule bei.",
+      ],
     },
     {
       name: "Birgit Brandner",
@@ -396,6 +444,9 @@ const extendedTeam: TeamGroup = {
       image: "/paideia/team/birgit-brandner.png",
       shortBio:
         "Sie begleitet die Schule in den Themen Grafik und Design und trägt die visuelle Kontinuität zwischen Marke und Alltag.",
+      longBio: [
+        "Ihre Arbeit ist auch auf der Website spürbar: Sie verbindet Erscheinungsbild, Materialien und die grafische Linie der Schule.",
+      ],
     },
   ],
 };
@@ -460,6 +511,7 @@ export const teamGroups: TeamGroup[] = [coreTeam, extendedTeam, legacyTeam];
 
 export const pressItems: PressItem[] = [
   {
+    sortDate: "2025-03-13",
     year: "2025",
     date: "13.03.2025",
     title: "Die Kreativwerkstatt in den Salzburger Stadtnachrichten",
@@ -469,6 +521,7 @@ export const pressItems: PressItem[] = [
     image: "/paideia/press/2025-stadtnachrichten.jpg",
   },
   {
+    sortDate: "2025-01-08",
     year: "2025",
     date: "08.01.2025",
     title: "Die Kreativwerkstatt im Radio",
@@ -478,6 +531,7 @@ export const pressItems: PressItem[] = [
     image: "/paideia/press/2025-radiofabrik.jpg",
   },
   {
+    sortDate: "2023-09-25",
     year: "2023",
     date: "25.09.2023",
     title: "Drei freie Schulen gestartet",
@@ -487,6 +541,7 @@ export const pressItems: PressItem[] = [
     image: "/paideia/press/2023-salzburger-nachrichten.png",
   },
   {
+    sortDate: "2023-04-01",
     year: "2023",
     date: "04.2023",
     title: "Neue freie Schule nach Seekirchner Vorbild",
@@ -494,6 +549,30 @@ export const pressItems: PressItem[] = [
       "Ein früher Medienmoment, in dem die Entstehungsidee der Schule erstmals größer öffentlich sichtbar wurde.",
     href: "https://www.sn.at/salzburg/politik/neue-freie-schule-soll-in-salzburg-nach-seekirchner-vorbild-entstehen-125208910",
     image: "/paideia/press/2023-seekirchen-vorbild.png",
+  },
+];
+
+export const schoolPaperIssues: SchoolPaperIssue[] = [
+  {
+    title: "Schulzeitung 2024",
+    year: "2024",
+    body: "Eine sichtbare Ausgabe der Kulturarbeit mit Gestaltung, Text und dokumentierter Öffentlichkeit.",
+    href: "/paideia/newspaper/kreativwerkblatt-2024.png",
+    image: "/paideia/newspaper/kreativwerkblatt-2024.png",
+  },
+  {
+    title: "Schulzeitung Ausgabe 2",
+    year: "2024/25",
+    body: "Weitere Seiten aus der Zeitung, die direkt aus der Schulpraxis und den Beiträgen der Kinder entstanden sind.",
+    href: "/paideia/newspaper/kreativwerkblatt-issue-2.png",
+    image: "/paideia/newspaper/kreativwerkblatt-issue-2.png",
+  },
+  {
+    title: "Titelblatt und Cover",
+    year: "Archiv",
+    body: "Das bisherige Cover bleibt als Einstieg und visuelle Klammer der Schulzeitung erhalten.",
+    href: "/paideia/newspaper/kreativwerkblatt-cover.png",
+    image: "/paideia/newspaper/kreativwerkblatt-cover.png",
   },
 ];
 
@@ -634,22 +713,14 @@ export const pageOrder = [
 export const pageNav = [
   { label: "Philosophie", href: "/philosophie" },
   { label: "Lernen & Alltag", href: "/lernen-alltag" },
-  { label: "Primary School", href: "/primary-school" },
-  { label: "Lower School", href: "/lower-school" },
-  { label: "New Avenues", href: "/new-avenues" },
-  { label: "Middle School", href: "/middle-school" },
-  { label: "Upper School", href: "/upper-school" },
   { label: "Gemeinschaft", href: "/gemeinschaft" },
-  { label: "Athletics", href: "/athletics" },
-  { label: "Academics", href: "/academics" },
-  { label: "Arts", href: "/arts" },
   { label: "Aufnahme", href: "/aufnahme" },
-  { label: "Infoabend", href: "/infoabend" },
+  { label: "Infoabend", href: "/aufnahme#infoabend" },
   { label: "Weitere Informationen", href: "/weitere-informationen" },
   { label: "Team", href: "/team" },
   { label: "Verein & Träger", href: "/verein-traeger" },
   { label: "Partner & Förderer", href: "/partner-foerderer" },
-  { label: "KreativWerkBlatt", href: "/kreativwerkblatt" },
+  { label: "Schulzeitung", href: "/kreativwerkblatt" },
   { label: "Presse", href: "/presse" },
   { label: "Kontakt", href: "/kontakt" },
   { label: "Fotos 2024/25", href: "/fotos/2024-25" },
@@ -1048,15 +1119,15 @@ export const pages: Record<string, WalkerSubpageContent> = {
       "Kunst ist bei Paideia kein freundlicher Zusatz, sondern ein Weg zu Ausdruck, Öffentlichkeit, Schönheit und innerer Form.",
     sideButtons: [
       { label: "Academics", href: "/academics" },
-      { label: "KreativWerkBlatt", href: "/kreativwerkblatt" },
+      { label: "Schulzeitung", href: "/kreativwerkblatt" },
       { label: "Gemeinschaft", href: "/gemeinschaft" },
     ],
     sideCard: {
       eyebrow: "Ausdruck",
-      title: "RHABARBER RHABARBER und das KreativWerkBlatt",
+      title: "RHABARBER RHABARBER und die Schulzeitung",
       href: "/kreativwerkblatt",
       image: "/paideia/newspaper/kreativwerkblatt-cover.png",
-      alt: "KreativWerkBlatt",
+      alt: "Schulzeitung",
     },
     sections: [
       `<h3><font color="#762123">KUNST IST KEIN RANDPROGRAMM</font></h3>
@@ -1086,14 +1157,14 @@ export const pages: Record<string, WalkerSubpageContent> = {
     lead:
       "Die Aufnahme soll weder Casting noch Blackbox sein. Familien sollen früh verstehen, welche Haltung, welche Verantwortlichkeiten und welche Form von Zusammenarbeit Paideia wirklich meint.",
     sideButtons: [
-      { label: "Infoabend", href: "/infoabend" },
+      { label: "Infoabend", href: "/aufnahme#infoabend" },
       { label: "Weitere Informationen", href: "/weitere-informationen" },
       { label: "Kontakt", href: "/kontakt" },
     ],
     sideCard: {
       eyebrow: "Erster Schritt",
       title: "Der Infoabend eröffnet den Aufnahmeweg",
-      href: "/infoabend",
+      href: "/aufnahme#infoabend",
       image: "/paideia/icloud/forest-group.jpg",
       alt: "Ort für Kennenlernen",
     },
@@ -1101,14 +1172,18 @@ export const pages: Record<string, WalkerSubpageContent> = {
       `<h3><font color="#762123">ABLAUF</font></h3>
       <ul>
         <li><strong>1. Informieren</strong><br />Website, Leitbild und FAQ lesen</li>
-        <li><strong>2. Infoabend besuchen</strong><br />Der erste ruhige Einstieg läuft über die eigene <a href="/infoabend">Infoabend-Seite</a> mit aktuellem Termin</li>
+        <li><strong>2. Infoabend besuchen</strong><br />Der erste ruhige Einstieg läuft direkt über den Abschnitt <a href="/aufnahme#infoabend">Infoabend</a> auf dieser Seite</li>
         <li><strong>3. Ansuchen</strong><br />Schriftliches Aufnahmeansuchen nach dem ersten Kennenlernen</li>
         <li><strong>4. Schnupperwoche</strong><br />Eine ganze Schulwoche in der Gemeinschaft</li>
         <li><strong>5. Gespräch und Entscheidung</strong><br />Danach folgt die Rückmeldung der Leitung und gegebenenfalls die Vertragsphase</li>
       </ul>`,
+      `<h3><a id="infoabend" name="infoabend"></a><font color="#762123">INFOABEND</font></h3>
+      <p>Der Infoabend ist kein ausgelagerter Nebenschritt mehr, sondern bewusst Teil des Aufnahmewegs. Familien sehen hier direkt, wann der nächste Abend stattfindet und wofür er gedacht ist.</p>
+      <p><strong>Nächster bekannter Termin:</strong> ${nextInfoabendFull}</p>
+      <p>Am Infoabend geht es um Haltung, Alltag, Aufnahmeweg, Fragen der Passung und die Kultur gemeinsamer Verantwortung. Anmeldung und Rückfragen bitte über <a href="mailto:info@kreativwerkstattsalzburg.at">info@kreativwerkstattsalzburg.at</a>.</p>`,
       `<h3><font color="#762123">WICHTIGE HINWEISE</font></h3>
       <p><strong>Keine Neuaufnahme im laufenden Schuljahr</strong> – laut bestehender Schulrechtslage.</p>
-      <p>Der Infoabend ist bewusst ausgelagert, damit der nächste bekannte Termin nicht zwischen Aufnahmehinweisen untergeht. Der derzeit bestätigte Termin steht auf der Seite <a href="/infoabend">Infoabend</a>.</p>`,
+      <p>Familien sollen früh verstehen, welche Haltung Paideia meint und wie verbindlich der gemeinsame Weg gedacht ist. Genau deshalb stehen Infoabend und Aufnahme nun an einem Ort.</p>`,
       `<h3><font color="#762123">WAS GEPRÜFT WIRD</font></h3>
       <p>Paideia fragt nicht nur, ob ein Kind „passt“, sondern ob Schule, Familie und Alltag wirklich zusammen tragfähig werden können.</p>
       <p>Entscheidend sind Beziehung, Reife, Gruppenkonstellation, organisatorischer Rahmen und die Bereitschaft, die Kultur der Schule mitzutragen.</p>
@@ -1294,16 +1369,16 @@ export const pages: Record<string, WalkerSubpageContent> = {
   },
   kreativwerkblatt: {
     slug: "kreativwerkblatt",
-    navLabel: "KreativWerkBlatt",
+    navLabel: "Schulzeitung",
     breadcrumbLabel: "Gemeinschaft",
-    title: "KreativWerkBlatt",
+    title: "Schulzeitung",
     description:
       "Schülerische Kulturarbeit wird sichtbar und zeigt Lernen mit Ausdruck, Sprache und Form.",
     eyebrow: "DAS",
     heroImage: "/paideia/newspaper/kreativwerkblatt-2024.png",
-    heroAlt: "KreativWerkBlatt",
+    heroAlt: "Schulzeitung",
     lead:
-      "Zeitung, Aufführung und Öffentlichkeit sind keine Nebensache, sondern Ausdruck von Bildung mit Resonanz.",
+      "Zeitung, Aufführung und Öffentlichkeit sind keine Nebensache, sondern Ausdruck von Bildung mit Resonanz. Die bisherigen Ausgaben lassen sich hier direkt ansehen und öffnen.",
     sideButtons: [
       { label: "Fotos 2024/25", href: "/fotos/2024-25" },
       { label: "Kontakt", href: "/kontakt" },
@@ -1314,14 +1389,12 @@ export const pages: Record<string, WalkerSubpageContent> = {
       title: "Lernen wird sichtbar, nicht nur benotet",
       href: "/lernen-alltag",
       image: "/paideia/newspaper/kreativwerkblatt-cover.png",
-      alt: "KreativWerkBlatt Cover",
+      alt: "Schulzeitung Cover",
     },
     sections: [
       `<h3><font color="#762123">WERK STATT BEHAUPTUNG</font></h3>
       <p>Wenn Kinder und Jugendliche an einer Zeitung, einer Aufführung oder einer Ausstellung arbeiten, entsteht Lernen mit Resonanz.</p>
       <p>Es wird prüfbar im besten Sinn: nicht über Punkte, sondern über Wirklichkeit, Sprache, Gestaltung und Stolz.</p>`,
-      `<p><img alt="KreativWerkBlatt Cover" src="/paideia/newspaper/kreativwerkblatt-cover.png" style="width: 100%;" /></p>
-      <p><img alt="KreativWerkBlatt Ausgabe" src="/paideia/newspaper/kreativwerkblatt-issue-2.png" style="width: 100%;" /></p>`,
     ],
   },
   presse: {
@@ -1343,7 +1416,7 @@ export const pages: Record<string, WalkerSubpageContent> = {
     ],
     sideCard: {
       eyebrow: "Archiv",
-      title: "Vier öffentliche Wegmarken",
+      title: "Chronik der öffentlichen Wegmarken",
       href: "/presse",
       image: "/paideia/press/2025-stadtnachrichten.jpg",
       alt: "Pressebild",
@@ -1364,7 +1437,7 @@ export const pages: Record<string, WalkerSubpageContent> = {
       "Paideia führt Kontakt, Standort, Zeiten und Aufnahmehinweise bewusst knapp und konkret zusammen.",
     sideButtons: [
       { label: "Aufnahme", href: "/aufnahme" },
-      { label: "Infoabend", href: "/infoabend" },
+      { label: "Infoabend", href: "/aufnahme#infoabend" },
       { label: "Spenden", href: "/verein-traeger#spenden" },
     ],
     sideCard: {
@@ -1394,6 +1467,11 @@ export const searchDocuments = [
     title: page.title,
     href: `/${page.slug}`,
     body: `${page.description} ${page.lead} ${page.sections.join(" ")}`,
+  })),
+  ...schoolPaperIssues.map((issue) => ({
+    title: issue.title,
+    href: issue.href,
+    body: `${issue.year} ${issue.body}`,
   })),
   {
     title: "Fotos 2024/25",
