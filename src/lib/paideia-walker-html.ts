@@ -16,12 +16,22 @@ import {
 } from "@/lib/paideia-walker-content";
 import { loadMirrorHtml } from "@/lib/mirror-utils";
 
+const PAIDEIA_PRIMARY_HEX = "#283058";
+const LEGACY_RED_HEX_VALUES = ["#762123", "#762122"];
+
 function escapeHtml(text: string) {
   return text
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function replaceLegacyAccentMarkup(html: string) {
+  return LEGACY_RED_HEX_VALUES.reduce(
+    (updatedHtml, legacyHex) => updatedHtml.replaceAll(legacyHex, PAIDEIA_PRIMARY_HEX),
+    html,
+  );
 }
 
 function linkAttributes(link: Partial<WalkerLink>) {
@@ -100,7 +110,7 @@ function applyBaseDocument(
     .attr("id", isHome ? "home-page" : "content-with-sidebar-page")
     .attr(
       "class",
-      `${isHome ? "home-page" : "content-with-sidebar-page"} cms-page-is-published admin-section-cms admin-section-website`,
+      `${isHome ? "home-page" : "content-with-sidebar-page paideia-panel-page"} cms-page-is-published admin-section-cms admin-section-website`,
     );
 
   $(".site-page-title-block").text(title);
@@ -359,6 +369,57 @@ function buildAccordion(label: string, paragraphs: string[]) {
   `;
 }
 
+function buildSubpageTopContent(page: WalkerSubpageContent) {
+  return `
+    <div class="paideia-panel-toolbar">
+      <a href="/" class="paideia-panel-close" data-paideia-close>
+        <span class="paideia-panel-close__icon">×</span>
+        <span>Schließen</span>
+      </a>
+    </div>
+    <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-feature-bottom-no-space-wrapper site-padding-dt-bottom-50-wrapper site-padding-mob-bottom-25-wrapper site-custom-title-left-wrapper cms-tag-feature-text-wrapper">
+      <div class="cms-text-feature-data">
+        <div class="cms-feature-datablock cms-text-feature-content site-feature-bottom-no-space site-padding-dt-bottom-50 site-padding-mob-bottom-25 site-custom-title-left cms-tag-feature-text">
+          <p style="text-align: right;"><var>${escapeHtml(page.eyebrow)}</var></p>
+          <h2 style="text-align: right;">${escapeHtml(page.title)}</h2>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function appendSubpagePanelScript($: CheerioAPI) {
+  $("body").append(`
+    <script>
+      (function () {
+        function setupPaideiaPanelTransitions() {
+          document.body.classList.add('paideia-panel-visible');
+          document.querySelectorAll('[data-paideia-close]').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || this.target === '_blank') {
+                return;
+              }
+
+              event.preventDefault();
+              var href = this.getAttribute('href') || '/';
+              document.body.classList.add('paideia-panel-closing');
+              window.setTimeout(function () {
+                window.location.href = href;
+              }, 240);
+            });
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', setupPaideiaPanelTransitions);
+        } else {
+          setupPaideiaPanelTransitions();
+        }
+      })();
+    </script>
+  `);
+}
+
 function buildTeamGroupsHtml(groups: TeamGroup[]) {
   return `
     <div class="paideia-team-groups">
@@ -366,7 +427,7 @@ function buildTeamGroupsHtml(groups: TeamGroup[]) {
         .map(
           (group) => `
         <section class="paideia-team-group">
-          <h3><font color="#762123">${escapeHtml(group.title)}</font></h3>
+          <h3><font color="${PAIDEIA_PRIMARY_HEX}">${escapeHtml(group.title)}</font></h3>
           <p>${group.description}</p>
           <div class="paideia-team-grid">
             ${group.members
@@ -753,7 +814,9 @@ export async function renderHomePage() {
     const slide = valueSlides.eq(index);
     setImageSlide(slide, value.image, value.title);
     slide.find(".site-slider-capton-data h2").text(value.number);
-    slide.find(".site-slider-more-desc-data h6").html(`<span style="color:#762123;">${value.title}</span>`);
+    slide
+      .find(".site-slider-more-desc-data h6")
+      .html(`<span style="color:${PAIDEIA_PRIMARY_HEX};">${value.title}</span>`);
     slide.find(".site-slider-more-desc-data p").eq(0).text(value.body);
     slide.find(".site-slider-more-desc-data a").attr("href", value.href).text("Mehr erfahren");
   });
@@ -872,7 +935,7 @@ export async function renderHomePage() {
 function buildSubpageBlocks(page: WalkerSubpageContent) {
   if (page.slug === "team") {
     return [
-      `<h3><font color="#762123">MENSCHEN</font></h3>
+      `<h3><font color="${PAIDEIA_PRIMARY_HEX}">MENSCHEN</font></h3>
       <p>Die Reihenfolge folgt bewusst dem abgestimmten Aufbau für Version 1. Zusätzliche Texte lassen sich pro Person aufklappen, damit die Seite klar bleibt und trotzdem mehr Tiefe bietet.</p>`,
       buildTeamGroupsHtml(teamGroups),
     ];
@@ -880,7 +943,7 @@ function buildSubpageBlocks(page: WalkerSubpageContent) {
 
   if (page.slug === "presse") {
     return [
-      `<h3><font color="#762123">CHRONIK</font></h3>
+      `<h3><font color="${PAIDEIA_PRIMARY_HEX}">CHRONIK</font></h3>
       <p>Die sichtbaren Medienmomente der Schule werden hier chronologisch von neu nach alt als öffentliche Wegmarken geordnet.</p>`,
       buildPressHtml(),
     ];
@@ -889,7 +952,7 @@ function buildSubpageBlocks(page: WalkerSubpageContent) {
   if (page.slug === "kreativwerkblatt") {
     return [
       ...page.sections,
-      `<h3><font color="#762123">AUSGABEN</font></h3>
+      `<h3><font color="${PAIDEIA_PRIMARY_HEX}">AUSGABEN</font></h3>
       <p>Die vorhandenen Ausgaben bleiben sichtbar und lassen sich direkt öffnen.</p>`,
       buildSchoolPaperHtml(),
     ];
@@ -905,7 +968,7 @@ function renderSubpageBody(page: WalkerSubpageContent) {
       <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-feature-bottom-no-space-wrapper cms-tag-feature-text-wrapper">
         <div class="cms-text-feature-data">
           <div class="cms-feature-datablock cms-text-feature-content site-feature-bottom-no-space cms-tag-feature-text">
-            ${section}
+            ${replaceLegacyAccentMarkup(section)}
           </div>
         </div>
       </div>`,
@@ -996,22 +1059,13 @@ export async function renderSubpage(slug: string) {
     </li>
   `);
 
-  $("#site-top-content").html(`
-    <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-feature-bottom-no-space-wrapper site-padding-dt-bottom-50-wrapper site-padding-mob-bottom-25-wrapper site-custom-title-left-wrapper cms-tag-feature-text-wrapper">
-      <div class="cms-text-feature-data">
-        <div class="cms-feature-datablock cms-text-feature-content site-feature-bottom-no-space site-padding-dt-bottom-50 site-padding-mob-bottom-25 site-custom-title-left cms-tag-feature-text">
-          <p style="text-align: right;"><var>${escapeHtml(page.eyebrow)}</var></p>
-          <h2 style="text-align: right;">${escapeHtml(page.title)}</h2>
-        </div>
-      </div>
-    </div>
-  `);
+  $("#site-top-content").html(buildSubpageTopContent(page));
 
   $("#site-main-content-left").html(`
     <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv cms-tag-feature-text-wrapper">
       <div class="cms-text-feature-data">
         <div class="cms-feature-datablock cms-text-feature-content cms-tag-feature-text">
-          <p><strong><span style="color:#762123;">${page.lead}</span></strong></p>
+          <p><strong><span style="color:${PAIDEIA_PRIMARY_HEX};">${page.lead}</span></strong></p>
         </div>
       </div>
     </div>
@@ -1028,6 +1082,7 @@ export async function renderSubpage(slug: string) {
       getBottomBannerLinks(`/${slug}`),
     ),
   );
+  appendSubpagePanelScript($);
 
   return $.html();
 }
@@ -1061,7 +1116,7 @@ export async function renderGalleryPage(year: string) {
       alt: gallery.items[0]?.alt ?? gallery.heroAlt,
     },
     sections: [
-      `<h3><font color="#762123">${escapeHtml(gallery.title.toUpperCase())}</font></h3>
+      `<h3><font color="${PAIDEIA_PRIMARY_HEX}">${escapeHtml(gallery.title.toUpperCase())}</font></h3>
        <p>${gallery.description}</p>`,
       buildGalleryHtml(gallery),
     ],
@@ -1092,21 +1147,12 @@ async function renderSubpageFromContent(page: WalkerSubpageContent, pathname: st
       ${escapeHtml(page.navLabel)}
     </li>
   `);
-  $("#site-top-content").html(`
-    <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv site-feature-bottom-no-space-wrapper site-padding-dt-bottom-50-wrapper site-padding-mob-bottom-25-wrapper site-custom-title-left-wrapper cms-tag-feature-text-wrapper">
-      <div class="cms-text-feature-data">
-        <div class="cms-feature-datablock cms-text-feature-content site-feature-bottom-no-space site-padding-dt-bottom-50 site-padding-mob-bottom-25 site-custom-title-left cms-tag-feature-text">
-          <p style="text-align: right;"><var>${escapeHtml(page.eyebrow)}</var></p>
-          <h2 style="text-align: right;">${escapeHtml(page.title)}</h2>
-        </div>
-      </div>
-    </div>
-  `);
+  $("#site-top-content").html(buildSubpageTopContent(page));
   $("#site-main-content-left").html(`
     <div class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv cms-tag-feature-text-wrapper">
       <div class="cms-text-feature-data">
         <div class="cms-feature-datablock cms-text-feature-content cms-tag-feature-text">
-          <p><strong><span style="color:#762123;">${page.lead}</span></strong></p>
+          <p><strong><span style="color:${PAIDEIA_PRIMARY_HEX};">${page.lead}</span></strong></p>
         </div>
       </div>
     </div>
@@ -1122,6 +1168,7 @@ async function renderSubpageFromContent(page: WalkerSubpageContent, pathname: st
       getBottomBannerLinks(pathname),
     ),
   );
+  appendSubpagePanelScript($);
 
   return $.html();
 }
@@ -1150,7 +1197,7 @@ export async function renderSearchPage(query: string) {
       alt: "Zur Startseite",
     },
     sections: [
-      `<h3><font color="#762123">ERGEBNISSE</font></h3>${buildSearchHtml(query)}`,
+      `<h3><font color="${PAIDEIA_PRIMARY_HEX}">ERGEBNISSE</font></h3>${buildSearchHtml(query)}`,
     ],
   };
 
