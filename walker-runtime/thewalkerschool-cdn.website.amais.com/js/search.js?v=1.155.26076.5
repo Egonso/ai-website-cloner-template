@@ -1,0 +1,35 @@
+﻿//--------------------------------------------------------//
+//--- Search Component Functions-----------------------------//
+function onSearchTermPressEnter(e, sender, url) {
+    if (e.keyCode == 13) {
+        onSearchTerm(sender, url);
+    }
+};
+
+function onSearchTerm(sender, url) {
+    window.location.href = url + encodeURIComponent($(sender).parent('.site-search-data').find('input[type=text].site-search-input').val());
+};
+
+
+//$(document).ready(function () {
+
+//    $('.cms-feature-wrapper').each(function (index, item) {
+//        if ($(item).attr('class') === undefined) return; // if no class at all do nothing
+
+//        var classList = $(item).attr('class').trim().replace(/(\s+)/g, ' ').split(' ');
+//        var className = classList.map(function (val, ndx) {
+//            return val = val + "-wrapper";
+//        }).join(' ');
+//        $(item).attr('class', className);
+
+//        $(this).addClass("cms-feature-wrapper featureMainDiv drop-target");
+//        $(this).removeClass("cms-feature-wrapper-wrapper featureMainDiv-wrapper drop-target-wrapper");
+
+//        $('[id*="TextFeature_"]').addClass("cms-text-feature");
+//        $('[id*="FormFeature_"]').addClass("cms-form-feature");
+//        $('[id*="GalleryFeature_"]').addClass("cms-gallery-feature");
+//        $('[id*="VideoFeature_"]').addClass("cms-video-feature");
+//        $('[id*="CalendarFeature_"]').addClass("cms-calender-feature");
+//        $('[id*="DisplayFeature_"]').addClass("cms-display-feature");
+//    });
+//});

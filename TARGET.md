@@ -1,41 +1,37 @@
 # Target Website
 
 ## URL
-<!-- Replace with the URL of the website you're reverse-engineering -->
-https://example.com
+https://www.thewalkerschool.org/
 
 ## Scope
 
 ### Pages to Replicate
-<!-- List every page you want to rebuild. Be specific. -->
-- [ ] Home page
-- [ ] (add more pages here)
+- [x] Home page
+- [x] Every public page listed in `docs/research/sitemap-urls.txt`
+- [x] Site-wide popup content at `/site-wide-popup`
+- [x] Shared templates used across admission, academics, arts, athletics, community, giving and school-division subpages
+- [x] Existing front-end animations, sliders, horizontal scroll behavior and popups
 
 ### Fidelity Level
-<!-- Choose one -->
-- [ ] **Pixel-perfect** — exact match in colors, spacing, typography, animations
+- [x] **Pixel-perfect** — exact match in colors, spacing, typography, animations
 - [ ] **High fidelity** — visually similar, same layout and feel, minor deviations OK
 - [ ] **Structural** — same layout and components, custom styling acceptable
 
 ### In Scope
-<!-- What you're building -->
-- Visual layout and styling
-- Component structure and interactions
-- Responsive design
-- Mock data for demo purposes
+- Full mirrored HTML for the live public site
+- Downloaded CSS, JS, fonts, images, videos and supporting assets used by mirrored pages
+- Original interaction model: intro fade, mobile nav toggles, AOS reveals, Slick sliders, video popups, campus map hotspots and desktop horizontal scrolling
+- Research notes for later Paideia adaptation
 
 ### Out of Scope
-<!-- What you're NOT building -->
-- Real backend / database
-- Authentication
-- Real-time features
-- SEO optimization
-- Accessibility audit (unless specifically needed)
+- Authenticated portals such as Walker Web / Blackbaud sessions
+- Real backend writes, search indexing and third-party analytics fidelity
+- CMS authoring workflows
+- Accessibility audit beyond preserving the current live behavior
 
 ## Why
-<!-- Brief explanation of why you're cloning this site -->
-(Fill in your reason — portfolio piece, learning exercise, demo, template for custom features, etc.)
+Use The Walker School as a precise reference implementation and design-system benchmark inside the Paideia web project. The mirrored clone is intended as a working template and comparison baseline before adapting content and brand expression for Paideia.
 
 ## Customization Plans
-<!-- After the base emulation, what changes do you want to make? -->
-- (List planned modifications or say "none — pure emulation")
+- Keep the first pass as a faithful Walker reference clone
+- Use the clone as a source template for later Paideia-specific redesign and content replacement

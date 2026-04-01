@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="content-template">
+
+<head>
+    
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-M7X5MGJ');
+        </script>
+        <!-- End Google Tag Manager -->
+        <!--Custom HTML Header -->
+<script async src="https://tag.ubiqeducation.distilled.untitledfirm.com/subclient/thewalkerschool"></script>
+
+<meta name="google-site-verification" content="83v12fVs8P2y62fs4fpA-4yXm5XD-1p0R3wi-8LaTB8" />
+        <!-- End Custom Html Header -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+<link href="../thewalkerschool-cdn.website.amais.com/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="../thewalkerschool-cdn.website.amais.com/css/site.css%3Fv=1.155.26076.5.css" rel="stylesheet" type="text/css" />
+<link href="../thewalkerschool-cdn.website.amais.com/plugins/slick/slick.css" rel="stylesheet" type="text/css" />
+<link href="../thewalkerschool-cdn.website.amais.com/plugins/slick/slick-theme.css" rel="stylesheet" type="text/css" />
+<script src="../thewalkerschool-cdn.website.amais.com/lib/kendo/2024.3.806/jquery.min.js%3Fv=1.155.26076.5"></script>
+<script src="../thewalkerschool-cdn.website.amais.com/lib/bootstrap/dist/js/bootstrap.bundle.min.js%3Fv=1.155.26076.5"></script>
+<script src="../thewalkerschool-cdn.website.amais.com/plugins/slick/slick.min.js%3Fv=1.155.26076.5"></script>
+
+
+<script type="text/javascript">
+
+        var amaisDxpIngressAPI = null;
+
+        async function initAmaisDxpInsight(e) {
+            e.detail.service.api.Client('nvYLxu459Cnh334aR6kDtR2PU6iJ8G44H2nz0W4rCQYSZLbg9kUAhUC2BURbnqSvXhhLRDkd1JIBCQTqjYQjfW3lHsvuzo4g0H4K', 'TheWalkerSchool', 'https://ingress.dxp.amais.com');
+            amaisDxpIngressAPI = e.detail.service.api;
+            await e.detail.service.api.InitTracker({ trls: true, trua: true });
+            await e.detail.service.api.interactionCreate({ predicate: "Visit", objectMetadata: { contentType: "Page", pageId: "4", canonicalTitle: "Site Wide Popup", canonicalURL: "https://www.thewalkerschool.org/site-wide-popup"}});
+        }
+        document.addEventListener('amais-insight-sdk-ready', initAmaisDxpInsight);
+
+        $(document).on("amais:bookmark:added", function (event, data) {
+            if (amaisDxpIngressAPI != null && data != null && data.url && $.trim(data.url)) {
+                amaisDxpIngressAPI.interactionCreate({ predicate: "Added Interest", object: data.url });
+            } 
+        });
+
+        $(document).on("amais:bookmark:removed", function (event, data) {
+            if (amaisDxpIngressAPI != null && data != null && data.url && $.trim(data.url)) {
+                amaisDxpIngressAPI.interactionCreate({ predicate: "Removed Interest", object: data.url });
+            }
+        });
+
+        $(document).on("amais:admissions:calculator:clicked", function (event, data) {
+            var interaction = { predicate: "Admissions Calculator Used" };
+            
+            if (data != null && data.nameAndDob && $.trim(data.nameAndDob)) {
+                interaction.object = data.nameAndDob;
+            }
+
+            if (data != null && data.parentFirstName && $.trim(data.parentFirstName) && data.parentEmail && $.trim(data.parentEmail) && data.contactType && $.trim(data.contactType)) {
+                interaction.subjectMetadata = { Email: data.parentEmail, FirstName: data.parentFirstName, ContactType: data.contactType };
+            }
+
+            if (amaisDxpIngressAPI != null) {
+                amaisDxpIngressAPI.interactionCreate(interaction);
+            }
+        });
+
+</script>
+<script type="text/javascript" src="js/COLLECTOR/v1_0/collector.js" async></script>
+
+        <title>Site Wide Popup</title>
+        <link rel="canonical" href="site-wide-popup.html">
+        <meta property="og:type" content="Website">
+        <meta name="robots" content="all">
+        <link rel="icon" href="ams/favicon-90.ico">
+
+    <!-- Meta Data -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="Templates/TheWalkerSchool/css/style.css" />
+</head>
+
+<body id="content-page" class="content-page ">
+    
+        <div class="site-page-title site-container hidden-block">
+            <h1 class="site-page-title-block">
+                Site Wide Popup
+            </h1>
+        </div>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M7X5MGJ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+<div id="errorAlert" class="alert-message alert-warning-message fade show" role="alert" style="display:none;">
+    <div class="alert-message-icon">
+        <i class="icon-warning"></i>
+    </div>
+    <div class="alert-message-desc-wrapper">
+        <div class="alert-message-title">Alert</div>
+        <div class="alert-message-desc"></div>
+    </div>
+    <div class="alert-close">
+        <i class="icon-cross"></i>
+    </div>
+</div>
+<div id="alertDialog" class="alert-message alert-warning-message fade show" role="alert" style="display:none;">
+    <div class="alert-message-icon">
+        <i class="icon-warning"></i>
+    </div>
+    <div class="alert-message-desc-wrapper">
+        <div class="alert-message-title">Info</div>
+        <div class="alert-message-desc"></div>
+    </div>
+    <div class="alert-close">
+        <i class="icon-cross"></i>
+    </div>
+</div>
+
+    
+<script>
+    $(document).ready(function () {
+    $("body").addClass("admin-section-cms admin-section-website");
+
+        $(document).on("click",".front-option-mbl-title",function() {
+            $(this).next(".front-option-list-links").toggleClass("front-option-list-links-active")
+            $(this).toggleClass("front-option-mbl-title-active")
+            $(".front-option-mbl-title").html("Options");
+        });
+
+        $(".front-operation-mbl-title").click(function() {
+            $(this).toggleClass("front-operation-mbl-title-active")
+            $(".front-operation-wrapper").toggleClass("front-operation-wrapper-expand")
+        });
+    });
+</script>
+
+
+    <div id="page-wrapper" class="page-wrapper site-page-wrapper ">
+
+        <!-- Start Main Area -->
+        <main id="site-main" class="site-main">
+
+            <!-- Start main wrapper -->
+            <div class="site-main-wrapper">
+
+                <!-- Start sub wrapper -->
+                <div class="site-sub-wrapper">
+                    <div class="site-container">
+                        <article>
+                            <section class="site-main-data">
+                                <div id="MainContent" class="feature-zone  ">
+
+
+        <div id="TextFeature_5d34615fe97d41d88243109cfdb44e73" class="cms-text-feature cms-text-feature-wrapper cms-feature-wrapper featureMainDiv  site-desktop-hide-wrapper site-mobile-hide-wrapper site-wide-popup-wrapper cms-tag-feature-text-wrapper " feature-data-tag="text ">
+        <div id="textfeature_5d34615fe97d41d88243109cfdb44e73" class="cms-text-feature-data">
+                <div id="TextFeature_ContentArea_5d34615fe97d41d88243109cfdb44e73" class="cms-feature-datablock cms-text-feature-content site-desktop-hide site-mobile-hide site-wide-popup cms-tag-feature-text ">
+                    <h3>Welcome to The Walker School&rsquo;s new website.</h3>
+
+<p>Explore, engage and enjoy the journey of discovering all that makes our community exceptional!</p>
+
+                </div>
+        </div>
+    </div>
+
+
+</div>
+
+                            </section>
+                        </article>
+                    </div>
+                </div>
+                <!-- End sub wrapper -->
+
+            </div>
+            <!-- End main wrapper -->
+
+        </main>
+        <!-- End Main Area -->
+
+
+    </div>
+    <!-- JS -->
+    
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script src="../thewalkerschool-cdn.website.amais.com/js/search.js%3Fv=1.155.26076.5"></script>
+<script src="../thewalkerschool-cdn.website.amais.com/js/page-factory.js%3Fv=1.155.26076.5"></script>
+<script src="../thewalkerschool-cdn.website.amais.com/js/common.js%3Fv=1.155.26076.5"></script>
+
+
+</body>
+
+</html>
